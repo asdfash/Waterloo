@@ -1,0 +1,380 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath}
+
+\input{cs486_assign_preamble.tex}
+
+\lhead{CS 486/686}
+\chead{Fall 2022}
+\rhead{Assignment 1}
+\cfoot{v1.3}
+\lfoot{\copyright Blake VanBerlo 2022}
+
+\title{CS 486/686 Fall 2022 \\ Assignment 1 \\
+%{\color{blue} Sample Solutions}
+}
+\author{Blake VanBerlo \\ 85 marks}
+\date{{\bf Due Date:} 11:59pm EST on Tuesday October 4, 2022}
+
+\hyphenation{PYTHONHASHSEED}
+
+\begin{document}
+
+\maketitle
+
+\section*{Changes}
+
+\begin{itemize}
+\item v1.1: Updated the description of $h_2$ in Question 1 to enhance clarity.
+\item v1.2 Updated description of the successor function in Question 2 to remove ambiguity in the set of remaining locations. Clarified sorting in successor function.
+\item v1.3 Updated instructions for getting successors in Q2. Fixed state examples in Q1.
+\end{itemize}
+
+
+\newpage
+\section*{Instructions}
+
+\begin{itemize}
+\item
+Submit the signed academic integrity statement any written solutions in a file named \verb+academic_integrity_statement.pdf+ to the A1 project on Crowdmark. \textbf{(5 marks)}.
+
+\item Submit your written answers in a file named \verb+A1_written.pdf+ to the A1 project on Crowdmark. I strongly encourage you to complete your write-up in LaTeX, using this source file. If you do, in your submission, please replace the author with your name and student number. Please also remove the due date, the Instructions section, and the Learning goals section. Thanks!
+
+\item Submit any code to \verb+Marmoset+ at \url{https://marmoset.student.cs.uwaterloo.ca/}. Be sure to submit your code to the project named \texttt{Final}. 
+
+\item
+No late assignment will be accepted. This assignment is to be done individually.
+
+
+\item
+Lead TAs: 
+\begin{itemize}
+\item 
+Connor Raymond Stewart (\url{crstewart@uwaterloo.ca})
+\item
+Dake Zhang (\url{dake.zhang@uwaterloo.ca})
+\end{itemize}
+The TAs' office hours will be scheduled and posted on LEARN and Piazza.
+\end{itemize}
+
+
+
+\section*{Learning goals}
+
+{\bf Uninformed and Heuristic Search}
+\begin{itemize}
+\item Understand the components of a search problem.
+\item Trace the execution of Breadth-First Search and Depth-First Search.
+\item Define an admissible heuristic. Explain why a heuristic is admissible.
+\item Trace the execution of the A* search algorithm with an admissible heuristic.
+\item Implement the breadth-first search and A* search algorithms.
+\end{itemize}
+
+
+
+
+\newpage
+\section{Breakfast Time (26 marks)}
+
+Every morning, you eat the same breakfast: fried eggs (sunny-side-up), toast with peanut butter, a banana, and a fresh cup of coffee. Since you like to sleep in, you try to make your breakfast as quickly as possible. You will apply a search algorithm to determine the sequence of tasks that will help you make your breakfast as quickly as possible.
+
+Below is a list of tasks that are needed to prepare each part of your breakfast, along with some notes. Each minute, you can either wait or initiate $1$ task, and multiple items can be prepared simultaneously. Any secondary task $Y_2$ can only be initialized after task $Y_1$ is complete. Each task can only be completed once.
+
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{cccc}
+        \toprule
+        Task & Time [min] & Symbol \\
+        \midrule
+        Crack the eggs  & 1 & \texttt{E\textsubscript{1}} \\
+        Fry the eggs &  5 & \texttt{E\textsubscript{2}} \\
+        Toast the bread & 2 & \texttt{T\textsubscript{1}}\\
+        Apply peanut butter & 1 & \texttt{T\textsubscript{2}} \\
+        Peel the banana &  1 & \texttt{B\textsubscript{1}}\\
+        Brew the coffee &  3 & \texttt{C\textsubscript{1}}\\
+        Pour the coffee & 1 & \texttt{C\textsubscript{2}} \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:breakfast-actions}
+    \caption{Tasks involved in preparing breakfast, along with the time they take to complete.}
+\end{table}
+
+You define the search problem as follows:
+
+\begin{itemize}
+    \item \textbf{States:} The set of breakfast items that have been started and/or completed, written in alphabetical order as a string. The time since the task was initialized is written as a superscript next to the task symbol. Symbols that are not present in the state represent tasks that have not been started yet. For example:
+    \begin{itemize}
+        \item $E_2^1\,T_1^2$ means that the eggs have been frying for 1 minute and the toast has been toasting for 2 minutes (so it is ready to eat).
+        \item $B_1^2\,C_1^1\,E_2^6$ means that the banana was peeled 2 minutes ago, the coffee has been brewing for 1 minute, and the eggs have been frying for 6 minutes. The banana and the eggs are ready to eat.
+    \end{itemize}
+    \item \textbf{Initial state:} $\emptyset$  
+    \item \textbf{Goal state:} Any state $B_1^b\,C_2^c\,E_2^e\,T_2^t$ where $b,c,t \geq 1$, and $e \geq 5$
+    \item \textbf{Successor function:} State B is a successor of state A if all of the superscripts for unmodified items in A are incremented by 1 and optionally one of the following:
+    \begin{itemize}
+        \item An item $Y_1^t$ in A is converted to item $Y_2^1$ in B (if \texttt{Y\textsubscript{2}} is a valid symbol and \textit{t} is at least the time required for \texttt{Y\textsubscript{1}} in Table~\ref{tab:breakfast-actions}).
+        \item Item $Y_1^1$ is added to B (if \texttt{Y\textsubscript{1}} was not already in A)
+    \end{itemize}
+    For example, suppose the current state is $E_1^1\,T_1^2$. You could either wait, start brewing the coffee, peel the banana, or apply peanut butter to the toast. If the action is to wait, the next state will be $E_1^2\,T_1^3$. If the action is to start brewing the coffee, the next state will be $C_1^1\,E_1^2\,T_1^3$. If the action is to apply peanut butter, the next state will be $E_1^2\,T_2^1$.
+    \item \textbf{Cost function:} The time elapsed (in minutes)
+\end{itemize}
+
+
+{\bf Please complete the following tasks.}
+
+\begin{enumerate}[(a)]
+
+\item
+\label{proof}
+Recall that a heuristic $h(n)$ is consistent if, for every node $n$ and every successor $n'$ of $n$, we have $h(n) \leq c(n, n') + h(n')$. Prove that a heuristic function that is consistent is also admissible. You may assume that $h(n_G) = 0$ for any goal node $n_G$.
+
+\underline{Hint:} try a direct proof. Apply the definition of a consistent heuristic across an optimal path from some arbitrary node to a goal.
+
+
+\begin{markscheme} (6 marks)
+\begin{itemize}
+\item
+(4 marks) Correct proof
+\item
+(2 marks) The proof is clear, succinct, and easy to understand
+\end{itemize}
+
+\end{markscheme}
+
+
+\item
+\label{admissible-heuristic}
+Define $h_1(n)$ as the number of tasks that have yet to be initiated. Recall that each row in the table is a task. In \textbf{4 sentences or less}, explain why $h_1(n)$ is consistent.
+
+\begin{markscheme} (4 marks)
+\begin{itemize}
+\item
+(4 marks) A reasonable explanation
+\end{itemize}
+
+\end{markscheme}
+
+
+\item
+\label{consistent-heuristic}
+In \textbf{4 sentences or less}, explain why $h_1(n)$ is admissible.
+
+\begin{markscheme} (4 marks)
+\begin{itemize}
+\item
+(4 marks) A reasonable explanation
+\end{itemize}
+
+\end{markscheme}
+
+
+\item
+\label{domination}
+Define the heuristic $h_2(n)$ as the maximum time to complete an unprepared breakfast item. 
+For example, $h_2(E_1^2\,C_2^1) = 5$ because the eggs require the maximum time to complete (5 minutes to fry the eggs). As another example, $h_2(B_1^2\,C_1^1\,E_2^5\,T_1^3) = 3$ because the coffee requires the maximum time to complete (2 minutes to finish brewing + 1 minute to pour).
+
+Does $h_2$ dominate $h_1$? Explain why or why not in \textbf{4 sentences or less}
+
+\begin{markscheme} (4 marks)
+\begin{itemize}
+\item
+(2 marks) Correct answer
+\item
+(2 marks) A reasonable explanation
+\end{itemize}
+
+\end{markscheme}
+
+
+\item
+\label{execute_a_star}
+Execute the A* search algorithm on the breakfast problem using $h_2(n)$ as described above. Do not perform any pruning. Add nodes to the frontier in alphabetical order. Remember to stop if you expand the goal state. \textbf{Draw the search tree until you have expanded 5 nodes.}
+
+When drawing nodes, remember to write the state in the node. Annotate each node $n$ in the following format: $c + h = f$ where $c$ is the cost of the path to $n$, $h$ is $h_2(n)$, and $f$ is the sum of the cost and the heuristic values. Clearly indicate which nodes you expanded and in what order. You do not need to write out the frontier, but the tree must show all paths expanded after removing a node from the frontier.
+
+Break any $f$-value ties using lexicographical order. For example, \texttt{B\textsubscript{1}E\textsubscript{1}} precedes \texttt{E\textsubscript{1}} and should be expanded first if the $f$-values for both nodes are the same.
+
+We recommend using \url{https://app.diagrams.net/} to draw the search tree.
+
+\begin{markscheme} (8 marks)
+\begin{itemize}
+    \item (8 marks) Correct search tree with all nodes correctly expanded in order.
+\end{itemize}
+\end{markscheme}
+
+
+\end{enumerate}
+
+
+
+\newpage
+\section{The Travelling Trucker (54 marks)}
+
+In this programming question, you will solve a slightly modified instance of the \href{https://en.wikipedia.org/wiki/Travelling_salesman_problem}{Travelling Salesman Problem} using the A* search and the breadth-first search algorithms, with multi-path pruning.
+
+Suppose that you are a truck driver and your goal for the day is to deliver freight to all clients. You must leave the garage, make a stop at each client's warehouse to deliver freight, and return back to the garage at the end of the day. We relax the problem slightly so that you can drive through the same city more than once if needed. Since fuel is increasingly expensive, your company would like you to drive the minimum possible distance in total.
+
+Given a list of locations with their respective latitudes and longitudes and the distances between connected cities, the task is to devise the shortest route that will take you from the garage, to each destination on the list, then back to the garage.
+
+You are given two \texttt{.csv} files that contain all of the required information about the destinations and the map. Tables~\ref{tab:locations}~and~\ref{tab:distances} illustrate the format of the \texttt{.csv} files for a map with 4 locations. Note that the \texttt{.csv} files do not contain column headers or row indices. 
+
+\begin{table}[!htb]
+    \aboverulesep=0ex
+    \belowrulesep=0ex
+    \begin{minipage}{.48\linewidth}
+      \centering
+        \begin{tabular}{l|lll}
+            ID & Latitude & Longitude & Name \\
+            \midrule
+            0 & 43.46 & -80.52 & Waterloo \\
+            1 & 43.45 & -80.49 & Kitchener \\
+            2 & 42.99 & -81.25 & London \\
+            3 & 42.40 & -82.19 & Chatham \\
+        \end{tabular}
+        {\small
+          \caption{\texttt{locations.csv} gives the latitude, longitude, and name of the destinations. The row index gives the location ID.}                  
+          \label{tab:locations}}
+          \vspace{40pt}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}{.48\linewidth}
+      \centering
+        \begin{tabular}{l|llll}
+            & 0 & 1 & 2 & 3 \\
+            \midrule
+            0 & -1 & 3.6 & -1 & -1 \\
+            1 & 3.6 & -1 & 109 & 1 \\
+            2 & -1 & 109 & -1 & 114 \\
+            3 & -1 & -1 & 114 & -1 \\
+        \end{tabular}
+        {\small \caption{\texttt{distances.csv} gives the distance between locations on the map. The entry at row \textit{i} and column \textit{j} gives the distances between locations \textit{i} and \textit{j}. An entry of -1 indicates the locations are not directly connected by road.}
+        \label{tab:distances}}
+    \end{minipage} 
+\end{table}
+
+The search problem is formally defined as follows:
+
+\begin{itemize}
+    \item 
+    \textbf{States:} The state is the integer ID, latitude, and longitude of the current location, along with a set of the unvisited locations on the delivery list. For example, \texttt{(0,~43.46,~-80.52,~\{1,~2\})} indicates that the truck is in location 0 and has yet to deliver freight to locations 1 and 2. The state is implemented in the \texttt{State} class in the provided code.
+    \item
+    \textbf{Initial state:} The location of the garage and the set of locations to drop off freight
+    \item
+    \textbf{Goal state:} The location of the garage and the empty set of locations
+    \item
+    \textbf{Successor function:} State B is a successor of State A if and only if the following are true:
+    \begin{itemize}
+        \item The location in state B is connected to state A by road
+        \item The location in state B is not equal to the location of state A
+        \item If State B's location is in the set of remaining locations in State A, then State B's set of remaining locations is the same as State A, but with State B's location removed. Otherwise, the set of remaining locations are equal for both states.
+    \end{itemize}
+    \item
+    \textbf{Cost function:} The road distance travelled between the locations in State A and State B
+\end{itemize}
+
+
+{\bf Information on the Provided Code}
+
+We have provided three Python files in a zipped folder on LEARN. Please read the detailed comments in the provided files carefully. Note that some functions have already been implemented for you. Your task is to implement all of the functions in \texttt{search.py}, except for \texttt{sample\_heuristic()}.
+
+\begin{enumerate}
+    \item 
+    \makebox[2.2cm][l]{\texttt{search.py}:} Contains all the functions you will implement in this part of the \\ \makebox[2.2cm][l]{} assignment. You must implement the following functions: \verb+is_goal()+, \\ \makebox[2.2cm][l]{} \verb+get_path()+, \verb+get_successors()+, \verb+BFS()+, \verb+A_star()+, and \\ \makebox[2.2cm][l]{} \verb+custom_heuristic()+.
+    \item
+    \makebox[2.2cm][l]{\texttt{utils.py}:} Contains handy helper functions, along with implementations of a \verb+State+ \\ \makebox[2.2cm][l]{} class and a \verb+Node+ class for your search tree.
+    \item
+    \makebox[2.2cm][l]{\texttt{example.py}:} Demonstrates how to use the code to load the location and distance \\ \makebox[2.2cm][l]{} CSV files, and how to execute your search algorithms.
+\end{enumerate}
+
+Zip and submit only the \verb+search.py+ file to Marmoset. We will use our version of \verb+search.py+ to test your code. Do not modify any provided function signatures in \verb+search.py+. Doing so will cause you to fail our tests. Feel free to add any new code to \verb+search.py+. 
+
+{\bf The Heuristic Functions for A* Search:}
+
+We have provided the implementation of a simple admissible heuristic function (see \\ \texttt{sample\_heuristic()} in \verb+search.py+). This function is equal to the minimum road distance between any pair of locations multiplied by the number of remaining locations plus 1.
+
+You must implement your own heuristic function in \texttt{custom\_heuristic()}. As a hint, consider that the shortest travel distance between 2 points on Earth is the \href{https://en.wikipedia.org/wiki/Great-circle_distance}{orthodromic distance}. Consider using the \texttt{orthodromic\_distance()} function available in \verb+utils.py+.
+
+{\bf Testing Your Program}
+
+Debugging and testing are essential skills for computer scientists. For this question, debugging your program may be especially challenging because of ties. Among ``correct'' implementations, the number of nodes expanded may vary widely due to how we handle the nodes with the same heuristic value on the frontier. Please test your code using {\bf Python 3.8.5}. 
+
+Implement {\bf multi-path pruning for both BFS and A*}. When there are multiple paths to a state, multi-path pruning explores the first path to the state and discards any subsequent path to the same state. Use an explored set to keep track of the states that have been expanded by the algorithm. When you {\bf remove} a state from the frontier, check whether the state is in the explored set or not. If the state is in the explored set, then do nothing. Otherwise, add the state to the explored set and continue with the algorithm. Note that we perform pruning after we {\bf remove} a state from the frontier, not before we {\bf add} a state to the frontier.
+
+BFS's behaviour depends on the order of adding a state's successors to the frontier. We will break ties by using the number of remaining locations to visit in each state and their location IDs. Note that this will be done for you already if you produce a Python \verb+set+ of states with \verb+get_successors()+ and then sort it with \verb+sorted()+ (see the custom \verb+==+, \verb+<+, and \verb+>+ operators in the \verb+State+ class). At each step, BFS will add the successors to the frontier in {\bf increasing} order of the number of remaining locations and then in increasing order of their IDs.
+
+A* search will also break ties using the state comparison desribed above (see the overloaded operators for the \verb+Node+ class). Among several states with the same $f$-value, A* will expand the state with the fewest remaining locations. If two states have the same number of remaining locations, A* will break ties using the smallest location ID.
+
+{\bf Please complete the following tasks:}
+
+Submit your solutions to part (a) on Marmoset and submit your solution to part (b) on Crowdmark.
+
+\begin{enumerate}[(a)]
+
+\item Complete the empty functions in \verb+search.py+ and submit \verb+search.py+ on \href{https://marmoset.student.cs.uwaterloo.ca/}{Marmoset}. Marmoset will evaluate your program for its correctness and efficiency.
+
+For correctness, we have written unit tests for these functions: \verb+is_goal()+, \verb+get_path()+, \verb+get_successors()+, \verb+BFS()+, \verb+A_star()+.
+
+For each function, Marmoset provides one public test, which tests the function in a trivial scenario. There are also several secret tests. Before the deadline, you can only view the results of the public tests. After the deadline, Marmoset will run all the tests and calculate your marks.
+
+Each test runs the function up to a predefined time limit. The test passes if and only if the function terminates within the time limit and returns the expected result. Each test is all or nothing --- there are no partial marks available.
+
+\begin{markscheme}
+(46 marks) 
+
+Unit tests on \verb+get_path+, \verb+is_goal+, \verb+blocking_heuristic+, \verb+get_successors+, \verb+dfs+, and \verb+a_star+. 
+
+\begin{itemize}
+\item \verb+is_goal()+:  (1 public test + 2 secret tests) * 1 mark = 3 marks.
+\item \verb+get_path()+: (1 public test + 2 secret tests) * 1 mark = 3 marks.
+\item \verb+get_successors()+: (1 public test + 3 secret tests) * 2 marks = 8 marks.
+\item \verb+BFS()+:    (1 public test + 3 secret tests) * 4 marks = 16 marks.
+\item \verb+A_star()+: (1 public test + 3 secret tests) * 4 marks = 16 marks.
+\end{itemize}
+
+\end{markscheme}
+  
+\item Describe the heuristic function you implemented in \verb+custom_heuristic()+. In your answer, justify why it is consistent. Lastly, comment on how A* with your heuristic compares to A* with the sample heuristic (e.g., cost of solution, number of nodes expanded, domination). \textbf{Be as concise as possible}.
+
+\begin{markscheme} (8 marks)
+\begin{itemize}
+\item (2 marks) Clear description of custom heuristic
+\item (4 marks) Correct and concise justification for consistency
+\item (2 marks) Illustrative comparison with sample heuristic
+\end{itemize}
+\end{markscheme}
+
+ 
+
+\end{enumerate}
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -14,7 +14,8 @@ def is_goal(state: State, init_state: State) -> bool:
     :param state: Current state
     :init_state: Initial state
     '''
-    raise NotImplementedError
+    return len(state.remaining_locs)
+    # raise NotImplementedError
 
 
 def get_path(node: Node) -> List[State]:
@@ -66,16 +67,20 @@ def sample_heuristic(node: Node) -> float:
     '''
     An example of a consistent heuristic.
     The heuristic is the minimum distance between any two locations multiplied by the number of locations yet
-    to visit, including the initial location.
+    to visit, including the initial location. Evaluates to 0 if at a goal node.
     :param node: The current node in the search tree
     :return: The value of the heuristic function
     '''
+
+    init_state = get_path(node)[0]
+    if is_goal(node.state, init_state):
+        return 0.
 
     cur_state = node.state
     remaining_locs = list(cur_state.remaining_locs)
 
     dists = cur_state.distances.copy()
-    dists[dists != -1.] = np.inf
+    dists[dists == -1.] = np.inf
     min_dist = np.min(dists)                # The minimum distance between any 2 destinations
     min_n_trips = len(remaining_locs) + 1   # The minimum number of trips remaining
     return min_dist * min_n_trips

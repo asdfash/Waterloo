@@ -7,7 +7,7 @@
 \lhead{CS 486/686}
 \chead{Fall 2022}
 \rhead{Assignment 1}
-\cfoot{v1.3}
+\cfoot{v1.4}
 \lfoot{\copyright Blake VanBerlo 2022}
 
 \title{CS 486/686 Fall 2022 \\ Assignment 1 \\
@@ -28,6 +28,7 @@
 \item v1.1: Updated the description of $h_2$ in Question 1 to enhance clarity.
 \item v1.2 Updated description of the successor function in Question 2 to remove ambiguity in the set of remaining locations. Clarified sorting in successor function.
 \item v1.3 Updated instructions for getting successors in Q2. Fixed state examples in Q1.
+\item v1.4 Specified that $\emptyset$ cannot be a successor of $\emptyset$ in Q1.
 \end{itemize}
 
 
@@ -114,6 +115,9 @@ You define the search problem as follows:
         \item An item $Y_1^t$ in A is converted to item $Y_2^1$ in B (if \texttt{Y\textsubscript{2}} is a valid symbol and \textit{t} is at least the time required for \texttt{Y\textsubscript{1}} in Table~\ref{tab:breakfast-actions}).
         \item Item $Y_1^1$ is added to B (if \texttt{Y\textsubscript{1}} was not already in A)
     \end{itemize}
+    
+    Since you want to start breakfast as soon as possible, you cannot wait to begin breakfast. So as an exception to the above, $\emptyset$ is not a successor of $\emptyset$.
+    
     For example, suppose the current state is $E_1^1\,T_1^2$. You could either wait, start brewing the coffee, peel the banana, or apply peanut butter to the toast. If the action is to wait, the next state will be $E_1^2\,T_1^3$. If the action is to start brewing the coffee, the next state will be $C_1^1\,E_1^2\,T_1^3$. If the action is to apply peanut butter, the next state will be $E_1^2\,T_2^1$.
     \item \textbf{Cost function:} The time elapsed (in minutes)
 \end{itemize}

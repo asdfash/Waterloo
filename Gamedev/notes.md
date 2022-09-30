@@ -44,6 +44,7 @@ Implicit vs explicit values
             - usability
             - emotional experience  
             -(http://playerresearch.com)
+        - Players
 
     - Functional description
         - Explicit statement
@@ -55,4 +56,29 @@ Implicit vs explicit values
 4. 
 Looking for values in a game? use this
 
-  
+## Assignment
+3 _READINGS_ at least
+One game analysis  
+Heuristic - Tool for gaming knowledge  
+many other in the chapter but focus on VAP    
+https://owl.purdue.edu/owl/purdue_owl.html  
+Write about yourself  
+If you're quoting the website, cite the website
+
+Write out numbers under four syllables unless in title
+
+### Sample (draft?)
+A C One-Thirty Inbound: The values at play in "September 12"
+
+Hook
+
+In this essay, I will examine its value system by applying the values at play heuristic created by Mary Flanagan and Helen Nissenbaum in thier book _Values at Play in Digital Games_  
+
+What are the values of play of the:
+1. Key actors:
+    * 
+2. Functional description:
+    * (https://web.archive.org/web/20031211012716/http://www.newsgaming.com/press092903.htm)
+
+3. Societal imput
+4. Technical constraints

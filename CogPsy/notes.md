@@ -34,3 +34,19 @@ Machine - Computer
 - Practical realization of a "Turing machine"
 - A machine that can appy rules to a representation of a problem
 
+### Reasoning
+1. Humans think
+2. We somehow discern this fact regarding humans
+3. The test approximates how we discern this fact
+4. If the computer passes, it thinks
+
+equaconsistent: if one is consistent, the other is / vice versa
+NOTE: This isnt necessary for intelligence, but its one way of seeing intelligence. "If you do this you're intelligent, but you don't have to do this to be intelligent"
+
+# Functionalism
+Popular idea in 60s/70s  
+Still a dominant view of mind and cognitive science  
+Based on a notion of mutiple realizability  
+
+Stuff are defined by thier function as opposed to thier physical characteristics i.e. a lock could be digital/physical  
+

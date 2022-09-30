@@ -64,3 +64,7 @@ If the adversary can achieve 1 or 2, the SKES is said to be totally insecure.
         - blackmail
         - gun
         - social engineering
+
+
+# Week 4 wed
+DES s-boxes

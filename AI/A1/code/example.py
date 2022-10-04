@@ -18,3 +18,8 @@ h_fn = sample_heuristic
 path, cost = A_star(init_state, h_fn, locations, distances)
 path_str = ",\n".join([str(state) for state in path])
 print(f"A* Search: The solution (with cost {cost:.2f}) is:\n{path_str}")
+
+h_fn = custom_heuristic
+path, cost = A_star(init_state, h_fn, locations, distances)
+path_str = ",\n".join([str(state) for state in path])
+print(f"A* Search: The solution (with cost {cost:.2f}) is:\n{path_str}")

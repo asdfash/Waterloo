@@ -1,6 +1,6 @@
 import os
 from math import radians, cos, sin, asin, sqrt
-from typing import Set, Callable
+from typing import Set, Callable, Tuple
 
 import pandas as pd
 import numpy as np
@@ -129,7 +129,7 @@ def orthodromic_distance(lat1: float, lon1: float, lat2: float, lon2: float):
     return 2. * r * asin(sqrt(a))
 
 
-def load_map_info(location_csv_path: str, distance_csv_path: str) -> (np.array, np.array):
+def load_map_info(location_csv_path: str, distance_csv_path: str) -> Tuple[np.array, np.array]:
     '''
     Loads the location information for each state and the distances between each location
     :param location_csv_path: A CSV file containing the latitude and longitude of each location

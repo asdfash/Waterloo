@@ -72,7 +72,7 @@ A C One-Thirty Inbound: The values at play in "September 12"
 
 Hook
 
-In this essay, I will examine its value system by applying the values at play heuristic created by Mary Flanagan and Helen Nissenbaum in thier book _Values at Play in Digital Games_  
+In this essay, I will examine its value system by applying the values at play heuristic created by Mary Flanagan and Helen Nissenbaum in their book _Values at Play in Digital Games_  
 
 What are the values of play of the:
 1. Key actors:
@@ -80,5 +80,5 @@ What are the values of play of the:
 2. Functional description:
     * (https://web.archive.org/web/20031211012716/http://www.newsgaming.com/press092903.htm)
 
-3. Societal imput
+3. Societal input
 4. Technical constraints

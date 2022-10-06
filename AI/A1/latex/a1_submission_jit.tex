@@ -11,7 +11,7 @@
 \lfoot{\copyright Blake VanBerlo 2022}
 
 \title{CS 486/686 Fall 2022 \\ Assignment 1 \\
-%{\color{blue} Sample Solutions}
+% {\color{blue} Sample Solutions}
 }
 \author{Blake VanBerlo \\ 85 marks}
 \date{{\bf Due Date:} 11:59pm EST on Tuesday October 4, 2022}
@@ -144,6 +144,19 @@ Recall that a heuristic $h(n)$ is consistent if, for every node $n$ and every su
 
 \end{markscheme}
 
+\begin{sol}
+{\color{blue} 
+    For $h(n)$ to be admissible, $h(n) \leq c(n,n_G) + h(n_G)$
+
+    For nodes which are directly connected to $n_G$, $n_G$ can be subsituted into $n'$, hence it is admissible. (These nodes shall be named $n'$).
+
+    For nodes which are connected to nodes above, since in order to be consistent, $h(n) \leq c(n, n') + h(n')$, and $h(n') \leq c(n,n_G) + h(n_G)$. Thus, assuming that the cost is not negative, $h(n)$ is also admissible.
+
+    This reasoning can be repeated for all nodes along a path. Thus, a heuristic function that is consistent is
+    also admissible. (Shown)
+    
+}
+\end{sol}
 
 \item
 \label{admissible-heuristic}
@@ -157,6 +170,11 @@ Define $h_1(n)$ as the number of tasks that have yet to be initiated. Recall tha
 
 \end{markscheme}
 
+\begin{sol}
+{\color{blue} 
+As one traverses down the graph, tasks would be initiated and no task can be uninitiated. Therefore, number of tasks at the start is always $\geq$ than those after it. Thus, $h_1(n) \leq c(n, n') + h_1(n')$ for any node, and the hueristic is consistent.
+}
+\end{sol}
 
 \item
 \label{consistent-heuristic}
@@ -170,6 +188,10 @@ In \textbf{4 sentences or less}, explain why $h_1(n)$ is admissible.
 
 \end{markscheme}
 
+\begin{sol}
+{\color{blue}
+From part a, a consistent function is also admissible. From part b, $h_1(n)$ is consistent. Thus, $h_1(n)$ is admissible. }
+\end{sol}
 
 \item
 \label{domination}
@@ -187,7 +209,10 @@ Does $h_2$ dominate $h_1$? Explain why or why not in \textbf{4 sentences or less
 \end{itemize}
 
 \end{markscheme}
-
+\begin{sol}
+{\color{blue} 
+No. To dominate,$h_2(n) \geq h_1(n)$ $\forall$ $n$ in the graph. In the case of $E_1^1E_2^4$,$h_2(n)=1$, while $h_1(n)= 5$. }
+\end{sol}
 
 \item
 \label{execute_a_star}
@@ -205,6 +230,9 @@ We recommend using \url{https://app.diagrams.net/} to draw the search tree.
 \end{itemize}
 \end{markscheme}
 
+\begin{sol}
+{\color{blue} refer to attached image (I'm sorry i don't know how to use LaTeX well)}
+\end{sol}
 
 \end{enumerate}
 
@@ -335,6 +363,11 @@ Unit tests on \verb+get_path+, \verb+is_goal+, \verb+blocking_heuristic+, \verb+
 \end{itemize}
 
 \end{markscheme}
+
+\begin{sol}
+{\color{blue}
+ Submitted on Marmoset}
+\end{sol}
   
 \item Describe the heuristic function you implemented in \verb+custom_heuristic()+. In your answer, justify why it is consistent. Lastly, comment on how A* with your heuristic compares to A* with the sample heuristic (e.g., cost of solution, number of nodes expanded, domination). \textbf{Be as concise as possible}.
 
@@ -346,7 +379,21 @@ Unit tests on \verb+get_path+, \verb+is_goal+, \verb+blocking_heuristic+, \verb+
 \end{itemize}
 \end{markscheme}
 
- 
+\begin{sol}
+{\color{blue}
+Heuristic implemented was a fairly basic one. It returns the inverse of (number of nodes away from initial node +1).
+custom heuristic shall be represented as $h_c(n)$ while sample shall be represented as $h_s(n)$
+\vspace{4pt}
+This is consistent as:
+\begin{enumerate}
+\item The number of nodes never reduces the further away from the initial node. 
+\item Therefore, the value of h(n) is always smaller than nodes before it for all n
+\item Thus, $h_c(n) \leq c(n, n') + h(n')$ for all $n$ in the graph, and hence it is consistent.
+\end{enumerate}
+
+Since the range of the custom heuristic is  $0<h_c(n)\leq 1$, for every node $h_s(n)$ wil be greater due to it using the actual distances + 1. Thus $h_s(n)$ dominates $h_c(n)$
+}
+\end{sol}
 
 \end{enumerate}
 

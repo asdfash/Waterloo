@@ -82,3 +82,21 @@ What are the values of play of the:
 
 3. Societal input
 4. Technical constraints
+
+## Protest games 
+can either:
+1. critique the game
+2. use as a platform
+
+culture jamming?
+
+League to combat toxicity:  
+Text change - convert toxicity to niceties  
+control change - add jitter, change colours
+audio changes - repeated taunts mute for others ; make it more annoying for the toxic player  
+  
+
+final project - mechanics, messaging  
+do the players know?
+
+reductio ad absurdem

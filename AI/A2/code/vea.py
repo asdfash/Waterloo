@@ -1,4 +1,6 @@
 from typing import Dict, List, Tuple
+
+import numpy as np
 from factor import Factor
 
 '''
@@ -21,14 +23,16 @@ def restrict(factor: Factor, variable: str, value: int) -> Factor:
     ##### YOUR CODE HERE #####
     '''
     if factor.has_variable(variable):
-        for i in range(factor.n_vars):
-            if factor.var_list[i] == variable:
-                n = factor.values.copy()
-                del n[i]
-                l = factor.var_list.copy().remove(variable)
+        i = factor.var_list.index(variable)
+        n = factor.values.copy()
+        n = np.take(n,value,i)
+        l = factor.var_list.copy()
+        l.pop(i)
         nf = Factor(l,n)
         return nf
-    pass
+    return factor
+
+
 
 def multiply(factor_a: Factor, factor_b: Factor) -> Factor:
     '''
@@ -38,12 +42,63 @@ def multiply(factor_a: Factor, factor_b: Factor) -> Factor:
     :return: a new Factor object resulting from the multiplication of factor_a and factor_b. Note that the new factor's
              var_list is the union of the var_lists of factor_a and factor_b IN ALPHABETICAL ORDER.
     '''
-
     '''
     ##### YOUR CODE HERE #####
     '''
-    new_factor = Factor()
-    return new_factor
+    
+    #get overall shape
+    ashape = list(factor_a.values.shape)
+    bshape = list(factor_b.values.shape)
+    amissing = list(set(factor_b.var_list).difference(factor_a.var_list))
+    if len(amissing)>0:
+        amissing.reverse()
+    amissingi = [factor_b.var_list.index(i) for i in amissing]
+    bmissing = list(set(factor_a.var_list).difference(factor_b.var_list))
+    if len(amissing)>0:
+        bmissing.reverse()
+    bmissingi = [factor_a.var_list.index(i) for i in bmissing]
+    newvar = sorted(list(set(factor_b.var_list).union(set(factor_a.var_list))))
+
+    #pad first
+    for i in amissingi:
+        ashape += [factor_b.values.shape[i]]
+    for i in bmissingi:
+        bshape += [factor_a.values.shape[i]]
+
+
+    print(factor_a)
+    print(factor_b)
+
+    aval = np.broadcast_to(factor_a.values,ashape)
+    bval = np.broadcast_to(factor_b.values,bshape)
+    print("before")
+    print("aval")
+    print(aval)
+    print("bval")
+    print(bval)
+    x = amissing + factor_a.var_list.copy() 
+    for i, e in enumerate(x):
+        if e != newvar[i]:
+            j = newvar.index(e)
+            x[i],x[j] = x[j],x[i]
+            aval =np.swapaxes(aval,i,j)
+
+    x = bmissing+factor_b.var_list.copy() 
+    for i, e in enumerate(x):
+        if e != newvar[i]:
+            j = newvar.index(e)
+            x[i],x[j] = x[j],x[i]
+            bval =np.swapaxes(bval,i,j)
+    print("after")
+    print("aval")
+    print(aval)
+    print("bval")
+    print(bval)
+    newval = aval*bval
+
+    nf = Factor(newvar,newval)
+    print(nf)
+    return nf
 
 
 def sum_out(factor: Factor, variable: str) -> Factor:
@@ -58,15 +113,18 @@ def sum_out(factor: Factor, variable: str) -> Factor:
     '''
     ##### YOUR CODE HERE #####
     '''
+    
     if factor.has_variable(variable):
-        for i in range(factor.n_vars):
-            if factor.var_list[i] == variable:
-                n = factor.values.copy()
-                del n[i]
-                l = factor.var_list.copy().remove(variable)
-        nf = Factor(l,n)
-        return nf
-    pass
+        copied = factor.values.copy()
+        shape = factor.values.shape
+        i = factor.var_list.index(variable)
+        newvalue = np.sum(copied,i)
+        np.squeeze(newvalue)
+        newvar = factor.var_list.copy()
+        newvar.pop(i)
+        newfactor = Factor(newvar,newvalue)
+        return newfactor
+    return factor
 
 
 def normalize(factor: Factor) -> Factor:
@@ -80,9 +138,9 @@ def normalize(factor: Factor) -> Factor:
     ##### YOUR CODE HERE #####
     '''
     ov =factor.values.copy()
-    sum = ov.sum
+    sum = ov.sum()
+    
     val = ov/sum
-
     new_factor = Factor(factor.var_list,val)
     return new_factor
 
@@ -108,6 +166,69 @@ def vea(factor_list: List[Factor], query_variables: List[str], evidence: Dict[st
     '''
     ##### YOUR CODE HERE #####
     '''
-    final_factor = Factor()
+    if verbose:
+        print("Starting")
+        print("Evidence list:", evidence)
+        print("Factors:")
+    for i in factor_list:
+        if verbose:
+            print(i)
+            print()
+    if verbose:
+        print("Restricting")
+
+    for i,j in evidence.items():
+        factor_list = [restrict(k,i,j) for k in factor_list]
+    if verbose:
+        print("restriction done")
+        print("Factors:")
+        for i in factor_list:
+                print(i)
+        print("hidden variables:",ordered_hidden_variables)
+        print("begin elmination")
+        
+    flscopy1 = factor_list.copy()
+    print(flscopy1)
+    for i in ordered_hidden_variables:
+        if verbose:
+            print("eliminate",i)
+        working = []
+        for j in factor_list:
+            if j.has_variable(i):
+                working+=[j]
+                flscopy1.remove(j)
+        print(working)
+        while len(working)>1:
+            b = working.pop()
+            working[0]=multiply(working[0],b)
+        if len(working)>0:
+            flscopy1 += [sum_out(working[0],i)]
+
+
+    if verbose:
+        print("elmination done")
+        print("removing irrelevant values")
+    flscopy2 = flscopy1.copy()
+    for i in flscopy1:
+        if verbose:
+            print(i)
+            print()
+        for j in query_variables:
+            if i.has_variable(j):
+                break
+        else:
+            flscopy2.remove(i)
+            if verbose:
+                print("removed")
+    if verbose:
+        print("removal done")
+        print(flscopy2)
+        print("multiply")
+    final_factor = flscopy2.pop()
+    for i in flscopy2:
+        final_factor = multiply(final_factor,i)
+
+    final_factor = normalize(final_factor)
+
     treewidth = 0
     return final_factor, treewidth

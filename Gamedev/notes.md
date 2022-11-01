@@ -100,3 +100,14 @@ final project - mechanics, messaging
 do the players know?
 
 reductio ad absurdem
+
+
+
+### tips
+
+can look at how the code works to look at 
+
+## Race design
+
+Participatory design: user testing and feedback
+Co-design : stakeholder participation from beginning to end

@@ -180,7 +180,7 @@ The TAs' office hours will be scheduled and posted on LEARN and Piazza.
         {\color{blue} 
         For X to be conditionally independent with any node N given B , there should not be a path from X to N that does not go through B. Since B includes all children and parents of X, this holds for all N and thus X is conditionally independent of every variable in the network,conditioned on its Markov blanket
         }
-        \end{sol}
+    \end{sol}
     
     \item Not all the random variables in a Bayesian networks are always required to answer a probabilistic query. In fact, all variables that are not ancestors of query variables or evidence variables are irrelevant to the query. Let $Q = \{Q_1, \hdots, Q_m\}$ be the set of query variables and $e = \{e_1, \hdots,e_n\}$ be the set of evidence variables. Prove that the Variable Elimination Algorithm (VEA) returns the same distribution for some query $P(Q|E)$ if all irrelevant variables are pruned from the Bayesian network.
     
@@ -265,6 +265,12 @@ Unit tests:
 \end{itemize}
     
 \end{markscheme}
+
+\begin{sol}
+    {\color{blue} 
+    Code submiited.
+    }
+\end{sol}
 
 \item
 Below is a Bayesian network that appears in a recent review of uncertainties in Bayesian networks with discrete variables (\href{https://www.sciencedirect.com/science/article/abs/pii/S0952197619303045}{Rohmer, (2020)}). The network is a probabilistic model of brain cancer diagnosis. Note that the example is meant to be illustrative, as the network is simple and the conditional probability tables are fictional. The random variables are defined below: \\
@@ -357,6 +363,13 @@ Using your implementation from the previous question, execute the Variable Elimi
 \item (2 marks) Correct answer
 \end{itemize}
 \end{markscheme}
+
+\begin{sol}
+    {\color{blue} 
+    $P(B|ISC \land \lnot SH) = 0.0667$
+
+    }
+\end{sol}
 
 \item
 The complexity of VEA depends on the \textit{treewidth} of the Bayesian network, which is the maximum number of random variables in a factor after summing out a variable. The order in which hidden variables are eliminated impacts the treewidth, thereby impacting the complexity.

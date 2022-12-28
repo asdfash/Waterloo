@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1666805173 "c:/Users/jitth/Desktop/Waterloo/AI/A3/latex/a3_posted.tex" "a3_posted.pdf" "a3_posted" 1666805173
+["pdflatex"] 1668573010 "c:/Users/jitth/Desktop/Waterloo/AI/A3/latex/a3_posted.tex" "a3_posted.pdf" "a3_posted" 1668573011
   "C:/Users/jitth/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1666804720 80909 eab91d9745dd2edfd62a31d53cd5fe15 ""
   "C:/Users/jitth/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm1200.pk" 1664932579 14064 7ef2f8f8ee8c954b3b7242d337699440 ""
   "C:/Users/jitth/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1664932518 10786909 6588d85067ab32e3cc41461a56b6a780 ""
@@ -189,10 +189,10 @@
   "C:/Users/jitth/AppData/Local/Programs/MiKTeX/tex/latex/trimspaces/trimspaces.sty" 1253169183 1380 971a51b00a14503ddf754cab24c3f209 ""
   "C:/Users/jitth/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/jitth/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1656236890 56148 51a9a8571c07b9921892ae11063ae853 ""
-  "a3_posted.aux" 1666805173 34 3985256e7290058c681f74d7a3565a19 "pdflatex"
-  "a3_posted.out" 0 -1 0 "pdflatex"
-  "a3_posted.tex" 1666805169 18672 aed92cf8e8d5791aca2db25d5bed6825 ""
-  "c:/Users/jitth/Desktop/Waterloo/AI/A3/latex/a3_posted.tex" 1666805169 18672 aed92cf8e8d5791aca2db25d5bed6825 ""
+  "a3_posted.aux" 1668573011 855 2164d56b3c9a0a143ac195e31de77ce9 "pdflatex"
+  "a3_posted.out" 1668573011 216 abb0a110f9ebef5ee517b810afffd6a9 "pdflatex"
+  "a3_posted.tex" 1668573009 7777 84d3fa6dec20b876f67bdd6d84e8cbf2 ""
+  "c:/Users/jitth/Desktop/Waterloo/AI/A3/latex/a3_posted.tex" 1668573009 7777 84d3fa6dec20b876f67bdd6d84e8cbf2 ""
   "cs486_assign_preamble.tex" 1666804593 2097 f0d31967d7a21ce7fae965535ec1167b ""
   (generated)
   "a3_posted.aux"

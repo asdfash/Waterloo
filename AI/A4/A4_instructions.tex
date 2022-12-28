@@ -1,0 +1,391 @@
+\documentclass[12pt]{article}
+
+\input{cs486_assign_preamble.tex}
+
+\lhead{CS 486/686}
+\chead{Fall 2022}
+\rhead{Assignment 4}
+\cfoot{v1.2}
+\lfoot{\copyright Blake VanBerlo 2022}
+
+\title{CS 486/686 Assignment 4 \\ Fall 2022 \\ (125 marks)}
+\author{Blake VanBerlo}
+\date{Due Date: 11:59 PM ET on Tuesday, December 6, 2022}
+
+\begin{document}
+
+\maketitle
+
+\section*{Changes}
+
+\begin{itemize}
+\item
+{\bf v1.1:} Clarified weight updates as the sum of partial derivatives over {\it all} examples
+\item
+{\bf v1.2:} Improved clarity of Q1(a) description and fixed typo in Q2(c)
+\end{itemize}
+
+\newpage
+\section*{Instructions}
+
+\begin{itemize}
+\item
+Submit the signed academic integrity statement and any written solutions in a file to the Q0 box in the A4 project on Crowdmark. \textbf{(5 marks)}.
+
+\item Submit your written answers to questions 1 and 2 as PDF files to the Q1 and Q2 boxes respectively in the A4 project on Crowdmark. I strongly encourage you to complete your write-up in LaTeX, using this source file. If you do, in your submission, please replace the author with your name and student number. Please also remove the due date, the Instructions section, and the Learning Goals section. Thank you!
+
+\item Submit any code to \verb+Marmoset+ at \url{https://marmoset.student.cs.uwaterloo.ca/}. Be sure to submit your code to the project named \texttt{Assignment 4 - Final}. 
+
+\item
+No late assignment will be accepted. This assignment is to be done individually.
+
+\item
+Lead TAs: 
+\begin{itemize}
+\item 
+Jess Gano (\url{jgano@uwaterloo.ca})
+\item
+Ali Saheb Pasand (\url{ali.sahebpasand@uwaterloo.ca})
+\end{itemize}
+The TAs' office hours will be scheduled and posted on LEARN and Piazza.
+\end{itemize}
+
+
+\section*{Learning goals}
+
+{\bf Decision Networks}
+\begin{itemize}
+\item
+Construct a decision network for a given scenario
+\item
+Determine the number of policies in a decision network
+\item
+Execute the Variable Elimination Algorithm to determine the optimal policy for a decision network and its expected utility
+\end{itemize}
+
+{\bf Neural networks}
+\begin{itemize}
+\item
+Implement a multilayer perceptron
+\item
+Implement the backpropagation algorithm
+\item 
+Understand and interpret performance metrics in supervised learning
+\end{itemize}
+
+\newpage
+
+\section{Decision Networks (25 marks)}
+
+Brett is deciding what gift(s) to buy her boyfriend for the holidays. She is hoping to order him a new 2022-2023 Toronto Maple Leafs jersey. If she orders it now, the price is $\$250$. There is a $30\%$ chance that the store is going to have a flash sale on December 23, during which \textit{all items will be discounted by $\mathit{30\%}$}. Brett also thinks there is a $30\%$ chance the store will experience supply chain issues in December. If the store does not experience supply chain issues, Brett estimates that there is a $15\%$ chance that the jersey will be sold out on December 23. However, if the store {\it does} experience supply chain issues, the probability the new jersey would be sold out on December 23 would be $75\%$. If she chooses to purchase a jersey on December 23 and the new jersey is sold out, she will receive last year's 2021-2022 edition of the jersey, which regularly sells for $\$150$. She therefore has two decisions to make:
+\begin{itemize}
+    \item Whether to purchase one new jersey now
+    \item Whether to purchase one jersey on December 23. When making this decision, she knows whether she bought the new jersey beforehand, whether the flash sale occurred, and whether the new jersey is sold out
+\end{itemize}
+
+Let Brett's utility function be the following:
+\begin{equation*}
+    U = 30\, \mathbf{1}_{[J_n \geq 1]} + 18\, \mathbf{1}_{[J_o \geq 1]} - 0.1C - 5
+\end{equation*}
+where $J_n$ is the total number of new jerseys she purchases, $J_o$ is the number of old jerseys she purchases, and $C$ is the total cost of all jerseys she purchases. The indicator function $\mathbf{1}_{[\cdot]}$ evaluates to $1$ when the condition in the subscript is met and $0$ otherwise. For example, if Brett buys one new jersey right now and one old jersey on December 23 (because the new jersey is sold out) {\it and} there is a flash sale, the utility function would evaluate to $30(1) + 18(1) - 0.1(250 + (1-0.3)(150)) - 5 = 7.5$. As another example, if she chooses {\it not} to buy the new jersey now, {\it and} she buys the new jersey on December 23 (since it's not sold out) {\it and} there is {\it no} flash sale, then the utility is $30(1) + 18(0) - 0.1(250) - 5 = 0$.
+
+\begin{enumerate}[font=\Large,label=(\alph*)]
+    
+    \item Construct a decision network for Brett's situation. Write out the factors for the utility node and each chance node. Use the following variables:
+    \begin{itemize}
+        \item $B_1$: $1$ if Brett buys the new jersey right now; $0$ otherwise
+        \item $F$: $1$ if there is a flash sale on December 23; $0$ otherwise
+        \item $I$: $1$ if the store experiences supply chain issues; $0$ otherwise
+        \item $S$: $1$ if the new jersey is sold out on December 23; $0$ otherwise
+        \item $B_2$: $1$ if Brett buys a jersey on December 23; $0$ otherwise
+        \item $U$: Brett's utility
+    \end{itemize}
+    
+    
+    \begin{markscheme}
+    (10 marks)
+    
+    \begin{itemize}
+        \item (6 marks) Correct factors
+        \item (4 marks) Correct edges on decision network
+    \end{itemize}
+    
+    \end{markscheme}
+    
+    \item Recall that a policy consists of a decision function for {\it each} decision variable. How many possible policies are there for Brett's situation?
+    
+    \begin{markscheme}
+    (2 marks)
+    
+    \begin{itemize}
+        \item (2 marks) Correct total number of policies
+    \end{itemize}
+    
+    \end{markscheme}
+    
+    
+    \item Using the Variable Elimination Algorithm for decision networks, determine the optimal policy for Brett's situation and its expected utility (rounded to 4 decimal places). Determine the policy for $B_2$ before you determine the policy for $B_1$. When there are multiple chance nodes to eliminate in a single step, eliminate them in alphabetical order.
+    
+    Write out each VEA operation, along with the factor that is produced by the operation. For example, if you were to sum out $Y$ from $f_1(X, Y)$, you would write:
+
+    \vspace{10px}
+    \texttt{
+    Sum out Y from f\textsubscript{1}(X, Y) to produce f\textsubscript{2}(X). \\
+    f\textsubscript{2}(X):
+    \begin{tabular}{c|c}
+         X & Value \\
+         \hline
+         0 & 0.6 \\
+         1 & 0.4 \\
+    \end{tabular}
+    }
+    \\ To save space, you don't have to rewrite the factors you defined in 1(a).
+    
+    \begin{markscheme}
+    (13 marks)
+    
+    \begin{itemize}
+        \item (10 marks) Correct execution of VEA (including final policy and expected utility)
+        \item (3 marks) VEA operations and factors listed clearly
+    \end{itemize}
+    
+    \end{markscheme}
+    
+    
+\end{enumerate}
+
+\newpage
+
+\section{Neural Networks (100 marks)}
+
+In this part of the assignment, you will implement a feedforward neural network from scratch. Additionally, you will implement multiple activation functions, loss functions, and performance metrics. Lastly, you will train a neural network model to perform both a classification and a regression task. 
+
+
+\subsection{Bank Note Forgery - A Classification Problem}
+
+The classification problem we will examine is the prediction of whether or not a bank note is forged. The labelled dataset included in the assignment was downloaded from the \href{https://archive.ics.uci.edu/ml/datasets/banknote+authentication}{UCI Machine Learning Repository}. The target $y \in \{0, 1\}$ is a binary variable, where $0$ and $1$ refer to fake and real respectively. The features are all real-valued. They are listed below:
+
+\begin{itemize}
+    \setlength\itemsep{1px}
+    \item Variance of the transformed image of the bank note
+    \item Skewness of the transformed image of the bank note
+    \item Curtosis of the transformed image of the bank note
+    \item Entropy of the image
+\end{itemize}
+
+\subsection{Red Wine Quality - A Regression Problem}
+
+The task is to predict the quality of red wine from northern Portugal, given some physical characteristics of the wine. The target $y \in [0, 10]$ is a continuous variable, where $10$ is the best possible wine, according to human tasters. Again, this dataset was downloaded from the \href{https://archive.ics.uci.edu/ml/datasets/banknote+authentication}{UCI Machine Learning Repository}. The features are all real-valued. They are listed below:
+
+\begin{multicols}{3}
+\begin{itemize}
+    \setlength\itemsep{1px}
+    \item Fixed acidity
+    \item Volatile acidity
+    \item Citric acid
+    \item Residual sugar
+    \item Chlorides
+    \item Free sulfur dioxide
+    \item Total sulfur dioxide
+    \item Density
+    \item pH
+    \item Sulphates
+    \item Alcohol
+\end{itemize}
+\end{multicols}
+
+\subsection{Training a Neural Network}
+
+In Lecture 15, you learned how to train a neural network using the backpropagation algorithm. In this assignment, you will apply the forward and backward pass to the entire dataset simultaneously (i.e. batch gradient descent, where one batch is the entire dataset). As a result, your forward and backward passes will manipulate tensors, where the first dimension is the number of examples in the training set, $n$. When updating an individual weight $W^{(l)}_{i,j}$, you will need to find the sum of partial derivatives $\frac{\partial E}{\partial W^{(l)}_{i,j}}$ across all examples in the training set to apply the update. Algorithm~\ref{alg:training} gives the training algorithm in terms of functions that you will implement in this assignment. Further details can be found in the documentation for each function in the provided source code.
+
+\begin{algorithm}[ht!]
+\caption{Gradient descent with backpropagation}
+\label{alg:training}
+    \begin{algorithmic}
+        \Require $\eta > 0$ \Comment{Learning rate}
+        \Require $n_{epochs} \in \mathbb{N}^+$ \Comment{Number of epochs}
+        \Require $X \in \mathbb{R}^{n \times f}$ \Comment{Training examples with $n$ examples and $f$ features}
+        \Require $y \in \mathbb{R}^{n}$ \Comment{Targets for training examples}
+        \State Initiate weight matrices $W^{(l)}$ randomly for each layer.  \Comment{Initialize \texttt{net}}
+        \For{$i \in \{1,2,\dots\space,n_{epochs}\}$} \Comment{Conduct $n_{epochs}$ epochs}
+            \State $\texttt{A\_vals}, \texttt{Z\_vals} \gets \texttt{net.forward\_pass(}X\texttt{)}$ \Comment{Forward pass}
+            \State $\hat{y} \gets$ \texttt{Z\_vals[-1]} \Comment{Predictions}
+            \State $L \gets \mathcal{L}(\hat{y}, y)$
+            \State Compute $\frac{\partial }{\partial \hat{y}} \mathcal{L}(\hat{y}, y)$ \Comment{Derivative of error with respect to predictions}
+            \State \texttt{deltas} $\gets$ \texttt{backward\_pass(A\_vals,} $\frac{\partial }{\partial \hat{y}} \mathcal{L}(\hat{y}, y)$ \texttt{)} \Comment{Backward pass}
+            \State \texttt{update\_gradients()} \Comment{$W^{(\ell)}_{i,j} \gets W^{(\ell)}_{i,j} - \eta \sum_n \frac{\partial \mathcal{L}}{\partial W^{(\ell)}_{i,j}}$ for each weight}
+        \EndFor
+        \State \Return trained weight matrices $W^{(\ell)}$
+    \end{algorithmic}
+\end{algorithm}
+
+\subsection{Activation and Loss Functions}
+
+You will implement the following activation functions and their derivatives:
+
+\textbf{Sigmoid}
+\begin{align*}
+    g(x) = \frac{1}{1 + e^{-kx}}
+\end{align*}
+
+\textbf{Hyperbolic tangent}
+\begin{align*}
+    g(x) = \tanh{x}
+\end{align*}
+
+\textbf{ReLU}
+\begin{align*}
+    g(x) = \max(0, x)
+\end{align*}
+
+\textbf{Leaky ReLU}
+\begin{align*}
+    g(x) = \max(0, x) + \min(0, kx)
+\end{align*}
+
+You will implement the following loss functions and their derivatives:
+
+\textbf{Cross entropy loss}: for binary classification
+
+Compute the average over all the examples. Note that $\log()$ refers to the natural logarithm.
+
+\begin{align*}
+    \mathcal{L}(\hat{y}, y) = \frac{1}{n} \sum_{i=1}^n -(y \log(\hat{y}) + (1 - y)\log(1-\hat{y}))
+\end{align*}
+
+\textbf{Mean squared error loss}: for regression
+\begin{align*}
+    \mathcal{L}(\hat{y}, y) = \frac{1}{n} \sum_{i=1}^n (\hat{y} - y)^2
+\end{align*}
+
+\subsection{Implementation}
+
+We have provided three Python files. Please read the detailed comments in the provided files carefully. Note that some functions have already been implemented for you.
+%
+\begin{enumerate}
+    \item \makebox[4cm][l]{\texttt{neural\_network.py}:} Contains an implementation of a \verb+NeuralNetwork+ class. You \makebox[4cm][l]{}  must implement the \verb+forward_pass()+,  \verb+backward_pass()+, and \makebox[4cm][l]{} \verb+update_weights()+  methods in the \verb+NeuralNetwork+ class. {\bf Do \\ \makebox[4cm][l]{} not change the  function signatures. Do not change \\ \makebox[4cm][l]{} anything else in this file!}
+
+    \item \makebox[4cm][l]{\texttt{operations.py}:} Contains multiple classes for multiple activation functions, \\ \makebox[4cm][l]{} loss functions, and functions for performance metrics. The \\ \makebox[4cm][l]{}  activation functions extend a base \texttt{Activation} class and the \\ \makebox[4cm][l]{}  loss functions extend a base \texttt{Loss} class. You must implement \\ \makebox[4cm][l]{}  all the blank functions as indicated in this file. {\bf Do not change \\ \makebox[4cm][l]{} the  function signatures. Do not change anything else \\ \makebox[4cm][l]{} in this file!}
+
+    \item \makebox[4cm][l]{\texttt{train\_experiment.py}:} Provides a demonstration of how to define a \verb+NeuralNetwork+ \\ \makebox[4cm][l]{} object and train it on one of the provided datasets.  Feel free to \\ \makebox[4cm][l]{} change this file as you desire.
+\end{enumerate}
+
+{\bf Please complete the following tasks.}
+
+\begin{enumerate}[font=\Large,label=(\alph*)]
+
+\item 
+Implement the empty functions in \verb+neural_network.py+ and \verb+operations.py+. Zip and submit these two files on Marmoset.
+
+Please do not invoke any numpy random operations in \verb+neural_network.py+ and \\ \verb+operations.py+. This may tamper with the automatic grading.
+    
+\begin{markscheme}
+(84 marks)
+
+Unit tests for \texttt{neural\_network.py}:
+\begin{itemize}
+    
+    \item \verb+NeuralNetwork.forward_pass()+ \\
+    (1 public test + 2 secret tests) * 4 marks = 12 marks
+    
+    \item \verb+NeuralNetwork.backward_pass()+ \\
+    (1 public test + 2 secret tests) * 5 marks = 15 marks
+
+    \item \verb+NeuralNetwork.update_weights()+ \\
+    (1 public test + 2 secret tests) * 5 marks = 15 marks
+\end{itemize}
+
+Unit tests for \texttt{operations.py}:
+\begin{itemize}
+    
+    \item \verb+Sigmoid.value()+ \\
+    (1 public test + 2 secret tests) * 1 mark = 3 marks
+    
+    \item \verb+Sigmoid.derivative()+ \\
+    (1 public test + 2 secret tests) * 1 mark = 3 marks
+
+    \item \verb+Tanh.value()+ \\
+    (1 public test + 2 secret tests) * 1 mark = 3 marks
+    
+    \item \verb+Tanh.derivative()+ \\
+    (1 public test + 2 secret tests) * 1 mark = 3 marks
+
+    \item \verb+ReLU.value()+ \\
+    (1 public test + 2 secret tests) * 1 mark = 3 marks
+    
+    \item \verb+ReLU.derivative()+ \\
+    (1 public test + 2 secret tests) * 1 mark = 3 marks
+    
+    \item \verb+LeakyReLU.value()+ \\
+    (1 public test + 2 secret tests) * 1 mark = 3 marks
+    
+    \item \verb+LeakyReLU.derivative()+ \\
+    (1 public test + 2 secret tests) * 1 mark = 3 marks
+    
+    \item \verb+CrossEntropy.value()+ \\
+    (1 public test + 2 secret tests) * 1 mark = 3 marks
+    
+    \item \verb+CrossEntropy.derivative()+ \\
+    (1 public test + 2 secret tests) * 1 mark = 3 marks
+    
+    \item \verb+MeanSquaredError.value()+ \\
+    (1 public test + 2 secret tests) * 1 mark = 3 marks
+    
+    \item \verb+MeanSquaredError.derivative()+ \\
+    (1 public test + 2 secret tests) * 1 mark = 3 marks
+    
+    \item \verb+accuracy+ \\
+    (1 public test + 2 secret tests) * 1 mark = 3 marks
+    
+    \item \verb+mean_absolute_error+ \\
+    (1 public test + 2 secret tests) * 1 mark = 3 marks
+\end{itemize}
+    
+\end{markscheme}
+
+\vspace{5pt}
+Once you have implemented the functions, you can train the neural networks on the two provided datasets. The bank note forgery dataset is in \\ \texttt{data/banknote\_authentication.csv} and the wine quality dataset is in \\  \texttt{data/wine\_quality.csv}. In \verb+train_experiment.py+, we have provided some code to instantiate a neural network and train on an entire dataset. Implement the required functions and then complete the next activities.
+
+\item 
+Execute $k$-fold cross validation for the banknote forgery dataset with $k=5$. Use the sigmoid activation function for your output layer. Report the number of layers, the number of neurons in each layer, and the activation functions you used for your hidden layers. Train for $1000$ epochs in each trial and use $\eta=0.01$.
+
+To perform cross validation, randomly split the data into $5$ folds. For each fold, train the model on the remaining data and determine the trained model's accuracy on the validation set \textit{after training is complete}. You can use\\ \texttt{NeuralNetwork.evaluate()} to determine the accuracy on the validation set (i.e. fold). 
+
+Produce a plot where the $x$-axis is the epoch number and the $y$-axis is the average  training loss across all experiments for the current epoch. Report the average and standard deviation of the accuracy on the validation set over each experiment.
+
+For example, for your first fold, $80\%$ of the examples should be in the training set and $20\%$ of the examples should be in the validation set (i.e. fold 1). You will require the loss obtained after executing the forward pass for each of the $1000$ epochs. After model has trained, use the trained model to calculate the accuracy on the validation set. This is one experiment. You will need to run this experiment $5$ times in total, plotting the average loss at epoch $i$ for each epoch. You will report the average and standard deviation of the accuracy achieved on the validation set during each experiment.
+
+\begin{markscheme}
+(8 marks)
+
+\begin{itemize}
+    \item (6 marks) Reasonably correct plot.
+    \item (2 marks) Reasonable accuracy (average and standard deviation)
+\end{itemize}
+
+\end{markscheme}
+
+
+\item 
+Execute $k$-fold cross validation for the wine quality dataset with $k=5$. Use the Identity activation function for your output layer.Report the number of layers, the number of neurons in each layer, and the activation functions you used for your hidden layers.  Train for $1000$ epochs in each trial and use $\eta=0.001$.
+
+To perform cross validation, randomly split the data into $5$ folds. For each fold, train the model on the remaining data and determine the trained model's mean absolute error on the fold. You can use \texttt{NeuralNetwork.evaluate()} to determine the mean absolute error on the validation set (i.e. fold). 
+
+Produce a plot where the $x$-axis is the epoch number and the $y$-axis is the average training loss across all experiments for the current epoch. Report the average and standard deviation of the mean absolute error on the validation set over each experiment.
+
+\begin{markscheme}
+(8 marks)
+
+\begin{itemize}
+    \item (6 marks) Reasonably correct plot.
+    \item (2 marks) Reasonable mean absolute error (average and standard deviation)
+\end{itemize}
+
+\end{markscheme}
+
+
+
+\end{enumerate}
+
+
+\end{document}

@@ -111,3 +111,7 @@ can look at how the code works to look at
 
 Participatory design: user testing and feedback
 Co-design : stakeholder participation from beginning to end
+implicit bias - people draw inspiration from thier exprience
+intersectionality: alot of different categories that interlink with anything
+structal power: the structure of tech often hides its power through explicitly racialized and gender structures of operating.
+gaming culture replicates racialized and gendered exclusionary practices based on whose content and bodies are deemed worthy

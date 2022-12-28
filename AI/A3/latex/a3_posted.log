@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.8.28) (preloaded format=pdflatex 2022.10.4)  26 OCT 2022 13:26
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.8.28) (preloaded format=pdflatex 2022.10.4)  15 NOV 2022 23:30
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -751,6 +751,7 @@ File: translations-basic-dictionary-english.trsl (english translation file `tran
 )
 Package translations Info: loading dictionary `translations-basic-dictionary' for `english'. on input line 15.
 Package hyperref Info: Link coloring ON on input line 15.
+ (a3_posted.out) (a3_posted.out)
 \@outlinefile=\write4
 \openout4 = `a3_posted.out'.
 
@@ -794,79 +795,24 @@ Package lastpage Info: Please have a look at the pageslts package at
 (lastpage)             ! on input line 15.
 [1
 
-{C:/Users/jitth/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
-
-LaTeX Warning: Reference `LastPage' on page 2 undefined on input line 75.
-
-[2]
-
-LaTeX Warning: Reference `LastPage' on page 3 undefined on input line 164.
-
-[3]
-
-LaTeX Warning: Reference `LastPage' on page 4 undefined on input line 210.
-
-[4]
-
-LaTeX Warning: Reference `LastPage' on page 5 undefined on input line 244.
-
-[5]
-
-c:/Users/jitth/Desktop/Waterloo/AI/A3/latex/a3_posted.tex:254: Package enumitem Error: 1 undefined.
-
-See the enumitem package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.254 \begin{enumerate}[1]
-                          
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-LaTeX Warning: Reference `LastPage' on page 6 undefined on input line 275.
-
-[6]
-
-LaTeX Warning: Reference `LastPage' on page 7 undefined on input line 308.
-
-[7]
-
-LaTeX Warning: Reference `LastPage' on page 8 undefined on input line 373.
-
-[8] 
+{C:/Users/jitth/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] [2] [3] [4] 
 AED: lastpage setting LastPage
-
-LaTeX Warning: Reference `LastPage' on page 9 undefined on input line 398.
-
-[9] (a3_posted.aux)
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package rerunfilecheck Warning: File `a3_posted.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `a3_posted.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  87C7A15715688E6F8C6238196F379D83;399.
+[5] (a3_posted.aux)
+Package rerunfilecheck Info: File `a3_posted.out' has not changed.
+(rerunfilecheck)             Checksum: ABB0A110F9EBEF5EE517B810AFFFD6A9;216.
  ) 
 Here is how much of TeX's memory you used:
- 31473 strings out of 475389
- 687056 string characters out of 2777000
- 1006890 words of memory out of 3000000
- 52359 multiletter control sequences out of 15000+600000
+ 31452 strings out of 475389
+ 686937 string characters out of 2777000
+ 1008113 words of memory out of 3000000
+ 52353 multiletter control sequences out of 15000+600000
  478830 words of font info for 53 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 89i,13n,83p,768b,1194s stack positions out of 10000i,1000n,20000p,200000b,80000s
+ 89i,13n,83p,677b,1131s stack positions out of 10000i,1000n,20000p,200000b,80000s
  <C:\Users\jitth\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1200.pk><C:/Users/jitth/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/jitth/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/jitth/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/jitth/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/jitth/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/jitth/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/jitth/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/jitth/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/jitth/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/jitth/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/jitth/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti12.pfb><C:/Users/jitth/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on a3_posted.pdf (9 pages, 175764 bytes).
+Output written on a3_posted.pdf (5 pages, 153806 bytes).
 PDF statistics:
- 150 PDF objects out of 1000 (max. 8388607)
- 32 named destinations out of 1000 (max. 500000)
- 13 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 118 PDF objects out of 1000 (max. 8388607)
+ 13 named destinations out of 1000 (max. 500000)
+ 21 words of extra memory for PDF output out of 10000 (max. 10000000)
 

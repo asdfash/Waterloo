@@ -1,16 +1,15 @@
-from hashlib import sha256
-from hmac import HMAC
+#Discussed with Sean, Louis, Min Htet, Min Yue
+
 import os
 import base64
 import getpass
 import sys
-from cryptography.fernet import Fernet
-from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, hmac
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms
 from cryptography.hazmat.primitives.ciphers.modes import CBC
 from cryptography.hazmat.primitives.padding import PKCS7
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+
 def encryption():
     # First, we grab the contents of stdin and make sure it's a single string
     plaintext = "".join( sys.stdin.readlines() ).encode('utf-8')
@@ -48,7 +47,8 @@ def encryption():
     
     #pad text
     pkcs7 = PKCS7(128).padder()
-    paddedtext= pkcs7.update(plaintext)
+    pkcs7.update(plaintext)
+    paddedtext= pkcs7.finalize()
 
     # Actually do the encryption
     ciphertext = encryptor.update(paddedtext) + encryptor.finalize()
@@ -118,7 +118,8 @@ def decryption():
 
         #attempt depadding
         pkcs7 = PKCS7(128).unpadder()
-        plaintext= pkcs7.update(paddedtext)
+        pkcs7.update(paddedtext)
+        plaintext= pkcs7.finalize()
 
 
     except:
@@ -127,8 +128,6 @@ def decryption():
 
     # Return the plaintext to stdout
     sys.stdout.write(plaintext.decode('utf-8'))
-
-    ### END: This is what you have to change
 
 try:
     mode = sys.argv[1]
